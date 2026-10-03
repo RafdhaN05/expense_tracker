@@ -1,29 +1,41 @@
 import 'package:flutter/material.dart';
 
-/// ThemeProvider manages switching between Light, Dark, and System mode.
-class ThemeProvider with ChangeNotifier {
-  // Starts with 'system' so it matches your phone's Dark Mode automatically!
+class ThemeProvider with ChangeNotifier, WidgetsBindingObserver {
   ThemeMode _themeMode = ThemeMode.system;
+
+  ThemeProvider() {
+    WidgetsBinding.instance.addObserver(this);
+  }
 
   ThemeMode get themeMode => _themeMode;
 
-  bool isDarkMode(BuildContext context) {
+  bool get isDarkMode {
     if (_themeMode == ThemeMode.system) {
-      return MediaQuery.of(context).platformBrightness == Brightness.dark;
+      return WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+          Brightness.dark;
     }
     return _themeMode == ThemeMode.dark;
   }
 
-  /// Checks if the app is currently following the phone's system setting
-  bool get isSystemMode => _themeMode == ThemeMode.system;
+  @override
+  void didChangePlatformBrightness() {
+    _themeMode = ThemeMode.system;
+    notifyListeners();
+  }
 
   void toggleTheme(bool isDark) {
     _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
-    notifyListeners(); // Tells the whole app to update!
+    notifyListeners();
   }
 
-  void setSystemMode() {
+  void useSystemTheme() {
     _themeMode = ThemeMode.system;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }

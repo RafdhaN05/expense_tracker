@@ -115,7 +115,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 const SizedBox(height: 60),
 
-                Text(
+                // Title
+                const Text(
                   'Register',
                   style: TextStyle(
                     fontSize: 40,
@@ -127,6 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 const SizedBox(height: 45),
 
+                // Email Field
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -189,6 +191,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 const SizedBox(height: 20),
 
+          
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _isPasswordHidden,
@@ -262,6 +265,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 const SizedBox(height: 36),
 
+         
                 SizedBox(
                   width: double.infinity,
                   height: 56,

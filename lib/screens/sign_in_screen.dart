@@ -8,7 +8,6 @@ import 'register_screen.dart';
 import 'forgot_password_screen.dart';
 import 'main_nav_screen.dart';
 
-
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
@@ -128,8 +127,8 @@ class _SignInScreenState extends State<SignInScreen> {
               children: [
                 const SizedBox(height: 60),
 
-                
-                Text(
+          
+                const Text(
                   'Sign In',
                   style: TextStyle(
                     fontSize: 40,
@@ -141,7 +140,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
                 const SizedBox(height: 55),
 
-               
+         
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -273,7 +272,6 @@ class _SignInScreenState extends State<SignInScreen> {
                   },
                 ),
 
-              
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
