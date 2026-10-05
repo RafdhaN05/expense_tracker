@@ -49,11 +49,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
     );
     _noteController = TextEditingController(text: item?.note ?? '');
     _selectedCategory = item?.category ?? _categories.first;
-
-    // Default to today if new, or keep the existing date
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    _selectedDate = item?.date ?? today;
+    _selectedDate = item?.date ?? DateTime.now();
   }
 
   @override
@@ -64,15 +60,15 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
     super.dispose();
   }
 
+  // Allows picking Past, Present, and Future dates
   Future<void> _pickDate() async {
     final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
 
     final picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate.isBefore(today) ? today : _selectedDate,
-      firstDate: today, 
-      lastDate: DateTime(now.year + 5),
+      initialDate: _selectedDate,
+      firstDate: DateTime(now.year - 5), // Past 5 years enabled
+      lastDate: DateTime(now.year + 5),  // Future 5 years enabled
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -86,6 +82,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
         );
       },
     );
+
     if (picked != null) {
       setState(() => _selectedDate = picked);
     }
@@ -94,6 +91,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
   Future<void> _handleSave() async {
     if (!_formKey.currentState!.validate()) return;
 
+    // Safe check: Prevents app crash if session expired
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -216,7 +214,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
               ),
               const SizedBox(height: 14),
 
-              // Category Dropdown (NO ICONS)
+              // Category Dropdown
               DropdownButtonFormField<String>(
                 value: _selectedCategory,
                 dropdownColor: isDark ? const Color(0xFF1E293B) : Colors.white,
@@ -238,6 +236,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
               ),
               const SizedBox(height: 14),
 
+              // Date Picker
               InkWell(
                 onTap: _pickDate,
                 borderRadius: BorderRadius.circular(16),
@@ -258,7 +257,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
               ),
               const SizedBox(height: 14),
 
-              // Optional Note Field (NO ICONS)
+              // Optional Note Field
               TextFormField(
                 controller: _noteController,
                 maxLines: 2,
@@ -271,7 +270,6 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
               ),
               const SizedBox(height: 24),
 
-              
               SizedBox(
                 width: double.infinity,
                 height: 52,
@@ -320,7 +318,7 @@ class _ExpenseFormSheetState extends State<ExpenseFormSheet> {
     return InputDecoration(
       labelText: label,
       hintText: hint,
-      prefixIcon: null, // NO ICONS
+      prefixIcon: null,
       labelStyle: TextStyle(
         color: isDark ? Colors.white70 : AppColors.navyBlue.withOpacity(0.7),
       ),
